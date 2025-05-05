@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { console } from "inspector";
+
 
 const Titulo = () => (
           <h1 className="text-2xl font-bold mb-1">React - conceitos básicos</h1>
@@ -20,32 +20,54 @@ function Cabecalho() {
   );
 }
 
-interface TarefaProps {
-  titulo: string;
-          concluido?:boolean;
-
+interface TarefaInterface {
+      id: number;
+      title: string;
+      completed: boolean
 }
 
+interface TarefaProps {
+      dados: Array<TarefaInterface>
+}
 
-const Tarefa: React.FC<TarefaProps> = ({titulo, concluido}) => {
-    
-                const classe = 'p-3 mb-3 rounded-lg shadow-md hover:cursor-pointer hover:border ${this.props.concluido ? "bg-gray-800 hover:bg-gray-800" : "bg-gray-400 hover:bg-gray-400"}';
+const Tarefa: React.FC<TarefaProps> = ({ titulo, concluido }) => {
+  const [estaConcluido, setEstaConcluido] = useState(concluido);
+  
+  const classe = `p-3 mb-3 rounded-lg shadow-md hover:cursor-pointer hover:border ${
+		estaConcluido
+			? "bg-gray-800 hover:border-gray-800"
+			: "bg-gray-400 hover:border-gray-400"
+	}`;
 
+  const escutarClique
+        console.log('A tarefa '${titulo}' foi clicada!);
+        setEstaConcluido(!estaConcluido);
+	return (
+		<div
+			className={classe}
+			onClick={() => escutarClique()}
+		>
+			<h3 className="text-xl font-bold">{titulo}</h3>
+			<p className="text-sm">{estaConcluido ? "Concluída" : "Pendente"}</p>
+		</div>
+	);
+};
+
+const Tarefas: React.FC<TarefaProps> = ({ dados }) => {
                 return (
                       
-
-
-                
-                        <div 
-                          className={classe}
-                          OnClick={() => console.log('A tarefa '${titulo}' foi clicada')}
-                        >
-                            <h3 className="text-xl font-bold">{titulo}</h3>
-                            <p className="text-sm">{concluido ? "Concluida" : "Pendente"}</p>
+                        <div>
+                            {dados.map((tarefa) => (
+                              <Tarefa
+                                  key={tarefa.id}
+                                  titulo={tarefa.title}
+                                  concluido={tarefa.completed}
+                              />
+                            ))}
                         </div>
                 );
         
-}
+};
 
 const Home = () => {
   const tarefas = [
@@ -58,8 +80,7 @@ const Home = () => {
   return(
     <div className="container mx-auto p-4">
      <Cabecalho />
-     <Tarefa titulo={tarefas[0].title} concluido={tarefas[0].completed}/>
-     <Tarefa titulo={tarefas[1].title} concluido={tarefas[1].completed}/>
+     <Tarefas dados={tarefas}/>
     </div>
   );
 };
